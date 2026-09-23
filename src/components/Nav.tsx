@@ -23,8 +23,11 @@ export function Nav() {
   const [svcOpen, setSvcOpen] = useState(false);
   const pathname = usePathname();
 
+  const [pastHero, setPastHero] = useState(false);
+  const heroHandsOff = pathname === "/" && !pastHero;
+
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 24);
+    const onScroll = () => { setScrolled(window.scrollY > 24); setPastHero(window.scrollY > 120); };
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
@@ -34,7 +37,7 @@ export function Nav() {
   useEffect(() => { document.body.style.overflow = open ? "hidden" : ""; return () => { document.body.style.overflow = ""; }; }, [open]);
 
   return (
-    <header className={cn("fixed inset-x-0 top-0 z-50 transition-all duration-500", scrolled ? "py-2" : "py-4")}>
+    <header aria-hidden={heroHandsOff} className={cn("fixed inset-x-0 top-0 z-50 transition-all duration-500", scrolled ? "py-2" : "py-4", heroHandsOff && "pointer-events-none -translate-y-full opacity-0")}>
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
         <nav
           aria-label="Main"

@@ -1,4 +1,4 @@
-import { Hero } from "@/components/home/Hero";
+import { DayNightHero } from "@/components/home/DayNightHero";
 import { TrustBar } from "@/components/home/TrustBar";
 import { Services } from "@/components/home/Services";
 import { Calculator } from "@/components/home/Calculator";
@@ -12,7 +12,7 @@ import { QuoteCTA } from "@/components/home/QuoteCTA";
 export default function HomePage() {
   return (
     <>
-      <Hero />
+      <DayNightHero />
       <TrustBar />
       <Services />
       <Calculator />
