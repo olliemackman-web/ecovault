@@ -30,6 +30,7 @@ export function Nav() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
   useEffect(() => { setOpen(false); setSvcOpen(false); }, [pathname]);
+  useEffect(() => { const onKey = (e: KeyboardEvent) => e.key === "Escape" && (setSvcOpen(false), setOpen(false)); window.addEventListener("keydown", onKey); return () => window.removeEventListener("keydown", onKey); }, []);
   useEffect(() => { document.body.style.overflow = open ? "hidden" : ""; return () => { document.body.style.overflow = ""; }; }, [open]);
 
   return (
@@ -48,7 +49,7 @@ export function Nav() {
             <li className="relative" onMouseEnter={() => setSvcOpen(true)} onMouseLeave={() => setSvcOpen(false)}>
               <button
                 className="flex items-center gap-1 rounded-full px-3.5 py-2 text-sm font-medium text-muted transition hover:text-fg"
-                aria-expanded={svcOpen} aria-haspopup="true" onClick={() => setSvcOpen((v) => !v)}
+                aria-expanded={svcOpen} aria-haspopup="true" onClick={() => setSvcOpen(true)} onKeyDown={(e) => e.key === "Escape" && setSvcOpen(false)}
               >
                 Services <ChevronDown className={cn("h-4 w-4 transition", svcOpen && "rotate-180")} />
               </button>
