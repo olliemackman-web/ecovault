@@ -50,7 +50,7 @@ export function Calculator() {
 
             <label className="mt-9 block">
               <span className="flex items-baseline justify-between text-sm font-medium"><span>Monthly energy bill</span><span className="font-display text-2xl font-bold text-gradient">£{bill}</span></span>
-              <input type="range" min={60} max={600} step={10} value={bill} onChange={(e) => setBill(+e.target.value)} className="volt-range mt-3 w-full" aria-valuetext={`£${bill} per month`} />
+              <input type="range" min={60} max={600} step={10} value={bill} onChange={(e) => setBill(+e.target.value)} className="volt-range mt-1 w-full" aria-valuetext={`£${bill} per month`} />
               <span className="mt-1 flex justify-between text-xs text-muted-2"><span>£60</span><span>£600</span></span>
             </label>
 
@@ -89,8 +89,10 @@ export function Calculator() {
         </div>
       </div>
       <style jsx global>{`
-        .volt-range { -webkit-appearance: none; appearance: none; height: 6px; border-radius: 999px; background: linear-gradient(90deg, #1e8bff ${((bill - 60) / 540) * 100}%, rgba(255,255,255,.12) 0); cursor: pointer; }
-        .volt-range::-webkit-slider-thumb { -webkit-appearance: none; height: 26px; width: 26px; border-radius: 50%; background: #fff; border: 4px solid #1e8bff; box-shadow: 0 0 0 6px rgba(30,139,255,.2), 0 6px 20px -4px rgba(30,139,255,.8); transition: transform .2s; }
+        .volt-range { -webkit-appearance: none; appearance: none; height: 44px; background: transparent; cursor: pointer; touch-action: pan-y; }
+        .volt-range::-webkit-slider-runnable-track { height: 6px; border-radius: 999px; background: linear-gradient(90deg, #1e8bff ${((bill - 60) / 540) * 100}%, rgba(255,255,255,.12) 0); }
+        .volt-range::-moz-range-track { height: 6px; border-radius: 999px; background: linear-gradient(90deg, #1e8bff ${((bill - 60) / 540) * 100}%, rgba(255,255,255,.12) 0); }
+        .volt-range::-webkit-slider-thumb { -webkit-appearance: none; margin-top: -10px; height: 26px; width: 26px; border-radius: 50%; background: #fff; border: 4px solid #1e8bff; box-shadow: 0 0 0 6px rgba(30,139,255,.2), 0 6px 20px -4px rgba(30,139,255,.8); transition: transform .2s; }
         .volt-range::-webkit-slider-thumb:hover { transform: scale(1.1); }
         .volt-range::-moz-range-thumb { height: 26px; width: 26px; border-radius: 50%; background: #fff; border: 4px solid #1e8bff; box-shadow: 0 0 0 6px rgba(30,139,255,.2); }
       `}</style>

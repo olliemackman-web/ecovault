@@ -1,13 +1,23 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { preload } from "react-dom";
 import Image from "next/image";
 import Link from "next/link";
 import "./day-night-hero.css";
 import { site } from "@/lib/site";
 
-const LIGHT_IMG = "/images/hero-light.webp";
-const DARK_IMG = "/images/hero-dark.webp";
+/* Responsive photo variants: phone (1080px), tablet (1600px), desktop (2336px). */
+const IMG = {
+  light: { m: "/images/hero-light-m.webp", t: "/images/hero-light-t.webp", d: "/images/hero-light.webp" },
+  dark: { m: "/images/hero-dark-m.webp", t: "/images/hero-dark-t.webp", d: "/images/hero-dark.webp" },
+};
+type Size = "m" | "t" | "d";
+const pickSize = (): Size => {
+  if (typeof window === "undefined") return "d";
+  const w = window.innerWidth * Math.min(window.devicePixelRatio || 1, 2);
+  return w <= 1100 ? "m" : w <= 1700 ? "t" : "d";
+};
 
 const NAV_LINKS: [string, string][] = [
   ["/#services", "Services"],
@@ -18,22 +28,35 @@ const NAV_LINKS: [string, string][] = [
 ];
 
 export function DayNightHero() {
+  // Hint the LCP image early. media-scoped so a phone only preloads its own size.
+  preload(IMG.dark.m, { as: "image", media: "(max-width: 550px)", fetchPriority: "high" });
+  preload(IMG.dark.t, { as: "image", media: "(min-width: 551px) and (max-width: 850px)", fetchPriority: "high" });
+  preload(IMG.dark.d, { as: "image", media: "(min-width: 851px)", fetchPriority: "high" });
+
   const [isDark, setIsDark] = useState(true);
   const [menuOpen, setMenuOpen] = useState(false);
+  const heroRef = useRef<HTMLDivElement>(null);
   const bgFrontRef = useRef<HTMLDivElement>(null);
   const bgBackRef = useRef<HTMLDivElement>(null);
   const animatingRef = useRef(false);
+  const sizeRef = useRef<Size>("d");
 
-  // Theme + both bg layers start on the night image.
+  // Both bg layers start on the night image, sized for this device.
   useEffect(() => {
-    if (bgFrontRef.current) bgFrontRef.current.style.backgroundImage = `url(${DARK_IMG})`;
-    if (bgBackRef.current) bgBackRef.current.style.backgroundImage = `url(${DARK_IMG})`;
+    sizeRef.current = pickSize();
+    const dark = IMG.dark[sizeRef.current];
+    if (bgFrontRef.current) bgFrontRef.current.style.backgroundImage = `url(${dark})`;
+    if (bgBackRef.current) bgBackRef.current.style.backgroundImage = `url(${dark})`;
+    // warm the cache so the first toggle doesn't stall on a network fetch
+    const idle = window.requestIdleCallback ?? ((cb: () => void) => setTimeout(cb, 1500));
+    idle(() => { const i = new window.Image(); i.src = IMG.light[sizeRef.current]; });
   }, []);
 
   const toggleTheme = (toDark: boolean) => {
     if (toDark === isDark || animatingRef.current) return;
     animatingRef.current = true;
-    const target = toDark ? DARK_IMG : LIGHT_IMG;
+    const target = (toDark ? IMG.dark : IMG.light)[sizeRef.current];
+    heroRef.current?.classList.add("is-animating");
     if (bgBackRef.current) bgBackRef.current.style.backgroundImage = `url(${target})`;
     bgFrontRef.current?.classList.add("pull-down");
     setTimeout(() => {
@@ -42,12 +65,14 @@ export function DayNightHero() {
       setTimeout(() => {
         bgFrontRef.current?.classList.remove("pull-down");
         animatingRef.current = false;
+        // keep the blurred layer alive until the bounce-back settles
+        setTimeout(() => heroRef.current?.classList.remove("is-animating"), 500);
       }, 30);
     }, 300);
   };
 
   return (
-    <div className={`rh hero${isDark ? "" : " light-theme"}`}>
+    <div ref={heroRef} className={`rh hero${isDark ? "" : " light-theme"}`}>
       <div className="blur-overlay blur-overlay-top" />
       <div className="blur-overlay blur-overlay-bottom" />
       <div className="hero-bg-wrapper">
@@ -57,7 +82,7 @@ export function DayNightHero() {
 
       <nav className="navbar" aria-label="Primary">
         <Link href="/" className="logo-container" aria-label={`${site.name} – home`}>
-          <Image src="/brand/mark.png" alt="" width={734} height={550} priority className="logo" />
+          <Image src="/brand/mark.png" alt="" width={734} height={550} sizes="48px" priority className="logo" />
           <span className="brand-name">eco volt</span>
         </Link>
         <div className={`nav-links${menuOpen ? " active" : ""}`}>

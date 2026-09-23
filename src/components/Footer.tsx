@@ -21,23 +21,23 @@ export function Footer() {
           </div>
           <div>
             <h3 className="eyebrow mb-4">Services</h3>
-            <ul className="space-y-2.5 text-sm">
-              {services.map((s) => <li key={s.slug}><Link href={`/services/${s.slug}`} className="text-muted transition hover:text-fg">{s.name}</Link></li>)}
+            <ul className="space-y-1 text-sm">
+              {services.map((s) => <li key={s.slug}><Link href={`/services/${s.slug}`} className="inline-block py-1 text-muted transition hover:text-fg">{s.name}</Link></li>)}
             </ul>
           </div>
           <div>
             <h3 className="eyebrow mb-4">Company</h3>
-            <ul className="space-y-2.5 text-sm">
+            <ul className="space-y-1 text-sm">
               {[["/about", "About us"], ["/#process", "How it works"], ["/#reviews", "Reviews"], ["/quote", "Free quote"], ["/contact", "Contact"]].map(([h, l]) => (
-                <li key={h}><Link href={h} className="text-muted transition hover:text-fg">{l}</Link></li>
+                <li key={h}><Link href={h} className="inline-block py-1 text-muted transition hover:text-fg">{l}</Link></li>
               ))}
             </ul>
           </div>
           <div>
             <h3 className="eyebrow mb-4">Get in touch</h3>
             <ul className="space-y-3 text-sm">
-              <li><a href={site.phoneHref} className="flex items-center gap-2.5 text-muted transition hover:text-fg"><Phone className="h-4 w-4 text-volt-3" />{site.phone}</a></li>
-              <li><a href={`mailto:${site.email}`} className="flex items-center gap-2.5 text-muted transition hover:text-fg"><Mail className="h-4 w-4 text-volt-3" />{site.email}</a></li>
+              <li><a href={site.phoneHref} className="flex min-h-11 items-center gap-2.5 text-muted transition hover:text-fg"><Phone className="h-4 w-4 text-volt-3" />{site.phone}</a></li>
+              <li><a href={`mailto:${site.email}`} className="flex min-h-11 items-center gap-2.5 text-muted transition hover:text-fg"><Mail className="h-4 w-4 text-volt-3" />{site.email}</a></li>
               <li className="flex items-start gap-2.5 text-muted"><MapPin className="mt-0.5 h-4 w-4 shrink-0 text-volt-3" />Covering all major UK cities</li>
             </ul>
             <p className="mt-4 text-xs text-muted-2">{site.hours}</p>

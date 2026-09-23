@@ -26,6 +26,8 @@
 }
 
 html { color-scheme: dark; scroll-behavior: smooth; }
+a, button, [role="button"], input, select, textarea { -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
+@media (hover: none) { .card-hover:hover { transform: none; } }
 body {
   background: var(--color-bg);
   color: var(--color-fg);
